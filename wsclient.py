@@ -17,7 +17,7 @@ class WSClient:
         thread.start()
 
     def connection_tmp(self):
-        websocket.enableTrace(True)
+        # websocket.enableTrace(True)
         self.ws = websocket.WebSocketApp(self.uri,
                               on_message = self.on_message,
                               on_error = self.on_error,

@@ -1,7 +1,8 @@
 import socket
 import time
+import asyncio
 import websockets
-import wsclient
+import websocket_client
 from threading import Thread
 
 
@@ -45,23 +46,23 @@ class ProxyNode:
     def __init__(self):
         self.udp_recv = UDPReceive("0.0.0.0",8765)
         self.udp_send = UDPSend("127.0.0.1",8764)
-        self.ws_client = wsclient.WSClient('ws://47.108.235.65:5678/monitor',self.onRecv)
+        self.ws_client = websocket_client.WSClient('ws://47.108.235.65:5678/monitor',self.onRecv)
         self.udp_recv.run_udp_receive(self.onUDPMsgRecv)
         self.ws_client.connect()
 
     # websocket 接收回调
     def onRecv(self,msg):
         try:
-            pass
-        except ValueError:
-            return
+            # print(msg)
+            # print(f"receive from server<{msg}>")
+            self.udp_send.send(bytes.fromhex(msg))
+        except Exception as e:
+            print(e)
 
     # udp接受消息回调
     def onUDPMsgRecv(self,data):
-        print('receive')
-        print(type(data))
         try:
-            self.ws_client.sendMsg(bytes(data))
+            asyncio.run(self.ws_client.sendMsg(bytes(data)))
             pass
         except Exception as e:
             print(e)

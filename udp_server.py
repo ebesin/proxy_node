@@ -14,8 +14,12 @@ class UDPReceive:
     def recv(self):
         while True:
             recv_data,addr = self.udp_socket.recvfrom(1024*64)
-            print(recv_data)
-
+            # print(recv_data)
+            for i in range(len(recv_data)):
+                if i is not len(recv_data)-1:
+                    print('%#x'%recv_data[i],end=' ')
+                else:
+                    print('%#x'%recv_data[i])
     def run_udp_receive(self):
         self.udp_thread = threading.Thread(target=self.recv)
         self.udp_thread.start()
